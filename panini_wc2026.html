@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Panini WC2026 — Ma Collection</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;900&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0f1e;
+  --surface: #111827;
+  --surface2: #1a2235;
+  --border: rgba(255,255,255,0.08);
+  --border2: rgba(255,255,255,0.15);
+  --accent: #e8c840;
+  --accent2: #f97316;
+  --green: #22c55e;
+  --green-bg: rgba(34,197,94,0.12);
+  --orange: #f97316;
+  --orange-bg: rgba(249,115,22,0.12);
+  --red: #ef4444;
+  --red-bg: rgba(239,68,68,0.10);
+  --blue: #60a5fa;
+  --blue-bg: rgba(96,165,250,0.12);
+  --text: #f1f5f9;
+  --text2: #94a3b8;
+  --text3: #475569;
+  --radius: 10px;
+  --radius-lg: 14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:'Barlow',sans-serif;min-height:100vh;font-size:15px}
+h1,h2,h3,.condensed{font-family:'Barlow Condensed',sans-serif}
+
+/* header */
+.header{background:linear-gradient(135deg,#0a0f1e 0%,#1a1040 50%,#0a1a0f 100%);border-bottom:1px solid var(--border2);padding:1rem 1.25rem}
+.header-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem}
+.header-title{font-size:clamp(22px,5vw,30px);font-weight:900;letter-spacing:.5px;line-height:1}
+.header-title span{color:var(--accent)}
+.header-sub{font-size:13px;color:var(--text2);margin-top:2px}
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.stat{background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:var(--radius);padding:8px 10px;text-align:center}
+.stat-n{font-size:20px;font-weight:900;font-family:'Barlow Condensed',sans-serif;line-height:1}
+.stat-l{font-size:11px;color:var(--text2);margin-top:1px;text-transform:uppercase;letter-spacing:.5px}
+.stat.green .stat-n{color:var(--green)}
+.stat.orange .stat-n{color:var(--orange)}
+.stat.red .stat-n{color:var(--red)}
+.stat.blue .stat-n{color:var(--blue)}
+
+/* progress */
+.prog-bar{height:3px;background:rgba(255,255,255,0.08);border-radius:2px;margin-top:8px;overflow:hidden}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--green),var(--accent));border-radius:2px;transition:.4s ease}
+
+/* tabs */
+.tabs{display:flex;gap:4px;padding:10px 1.25rem;background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:10}
+.tab{flex:1;padding:8px 4px;border:none;border-radius:var(--radius);background:transparent;color:var(--text2);cursor:pointer;font-size:12px;font-weight:600;font-family:'Barlow Condensed',sans-serif;letter-spacing:.5px;text-transform:uppercase;transition:.15s;display:flex;align-items:center;justify-content:center;gap:5px}
+.tab:hover{color:var(--text);background:rgba(255,255,255,0.05)}
+.tab.active{background:rgba(255,255,255,0.1);color:var(--text)}
+.tab .dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.tab.t-collect.active .dot{background:var(--green)}
+.tab.t-missing.active .dot{background:var(--red)}
+.tab.t-doubles.active .dot{background:var(--orange)}
+.tab.t-inventory.active .dot{background:var(--blue)}
+
+/* content */
+.content{padding:1rem 1.25rem}
+.search-wrap{margin-bottom:1rem}
+.search-wrap input{width:100%;padding:9px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:14px;font-family:'Barlow',sans-serif;outline:none;transition:.15s}
+.search-wrap input::placeholder{color:var(--text3)}
+.search-wrap input:focus{border-color:var(--border2)}
+
+/* legend */
+.legend{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:12px;font-size:12px;color:var(--text2)}
+.leg{display:flex;align-items:center;gap:5px}
+.leg-sq{width:13px;height:13px;border-radius:3px;border:1px solid transparent;flex-shrink:0}
+
+/* team blocks */
+.team-block{border:1px solid var(--border);border-radius:var(--radius-lg);margin-bottom:8px;overflow:hidden;transition:.15s}
+.team-block.complete{border-color:rgba(34,197,94,0.3)}
+.team-header{display:flex;align-items:center;gap:10px;padding:10px 12px;cursor:pointer;background:var(--surface);transition:.1s;user-select:none}
+.team-header:hover{background:var(--surface2)}
+.team-code{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:15px;color:var(--accent);min-width:36px}
+.team-fullname{font-size:13px;color:var(--text2);flex:1}
+.team-prog{flex:1;min-width:60px}
+.team-count{font-size:12px;color:var(--text2);min-width:34px;text-align:right}
+.team-chev{font-size:16px;color:var(--text3);transition:.2s;flex-shrink:0}
+.team-chev.open{transform:rotate(180deg)}
+
+/* cards grid */
+.cards-grid{display:grid;grid-template-columns:repeat(10,1fr);gap:5px;padding:10px 12px;background:rgba(0,0,0,0.2)}
+@media(max-width:400px){.cards-grid{grid-template-columns:repeat(7,1fr)}}
+.card-btn{aspect-ratio:1;border-radius:6px;border:1px solid var(--border2);background:var(--surface2);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;font-family:'Barlow Condensed',sans-serif;color:var(--text3);transition:.1s;-webkit-tap-highlight-color:transparent}
+.card-btn:hover{border-color:rgba(255,255,255,0.3);color:var(--text)}
+.card-btn.owned{background:var(--green-bg);border-color:rgba(34,197,94,0.4);color:var(--green)}
+.card-btn.doubled{background:var(--orange-bg);border-color:rgba(249,115,22,0.5);color:var(--orange)}
+.card-btn.tripled{background:rgba(249,115,22,0.25);border-color:var(--orange);color:var(--orange);position:relative}
+.card-btn.tripled::after{content:attr(data-count);position:absolute;top:-4px;right:-4px;background:var(--orange);color:#000;font-size:9px;border-radius:50%;width:14px;height:14px;display:flex;align-items:center;justify-content:center;line-height:1}
+
+/* missing view */
+.missing-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:8px}
+.miss-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:10px}
+.miss-head{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:14px;color:var(--accent);margin-bottom:4px}
+.miss-sub{font-size:11px;color:var(--text2);margin-bottom:6px}
+.miss-nums{display:flex;flex-wrap:wrap;gap:3px}
+.miss-num{padding:2px 6px;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.2);border-radius:4px;font-size:11px;color:var(--red);cursor:pointer;transition:.15s;font-family:'Barlow Condensed',sans-serif;font-weight:600}
+.miss-num:hover{background:rgba(239,68,68,0.2);border-color:rgba(239,68,68,0.5)}
+.miss-num:active{transform:scale(.95)}
+
+/* doubles view */
+.doubles-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:8px}
+.dbl-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:10px}
+.dbl-head{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:14px;color:var(--orange);margin-bottom:4px}
+.dbl-sub{font-size:11px;color:var(--text2);margin-bottom:6px}
+.dbl-nums{display:flex;flex-wrap:wrap;gap:3px}
+.dbl-num{padding:2px 6px;background:var(--orange-bg);border:1px solid rgba(249,115,22,0.3);border-radius:4px;font-size:11px;color:var(--orange);font-family:'Barlow Condensed',sans-serif;font-weight:600;display:flex;align-items:center;gap:3px}
+.dbl-badge{background:var(--orange);color:#000;border-radius:50%;width:13px;height:13px;display:flex;align-items:center;justify-content:center;font-size:9px;flex-shrink:0}
+
+/* inventory full */
+.inv-table{width:100%;border-collapse:collapse;font-size:13px}
+.inv-table th{text-align:left;padding:8px 10px;color:var(--text2);font-size:11px;text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--border);font-weight:600;background:var(--surface)}
+.inv-table td{padding:7px 10px;border-bottom:1px solid var(--border)}
+.inv-table tr:hover td{background:rgba(255,255,255,0.02)}
+.inv-prog{display:flex;align-items:center;gap:8px}
+.inv-mini-bar{flex:1;height:4px;background:rgba(255,255,255,0.06);border-radius:2px;overflow:hidden}
+.inv-mini-fill{height:100%;border-radius:2px;transition:.3s}
+.badge-pct{font-size:11px;font-family:'Barlow Condensed',sans-serif;font-weight:700;min-width:32px;text-align:right}
+
+/* empty / done states */
+.empty{text-align:center;padding:3rem 1rem;color:var(--text3)}
+.empty svg{display:block;margin:0 auto 12px;opacity:.3}
+.all-done{text-align:center;padding:1.5rem;color:var(--green);font-size:13px;font-weight:600}
+
+/* toast */
+.toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%) translateY(80px);background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius);padding:8px 16px;font-size:13px;color:var(--text);transition:.25s ease;z-index:100;white-space:nowrap;pointer-events:none;opacity:0}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-top">
+    <div>
+      <h1 class="header-title">Panini <span>WC 2026</span></h1>
+      <div class="header-sub">48 équipes · 20 vignettes · 980 total</div>
+    </div>
+    <div style="text-align:right">
+      <div id="h-pct" style="font-family:'Barlow Condensed',sans-serif;font-size:32px;font-weight:900;color:var(--accent);line-height:1">0%</div>
+      <div style="font-size:11px;color:var(--text2)">complété</div>
+    </div>
+  </div>
+  <div class="stats-row">
+    <div class="stat green"><div class="stat-n" id="s-own">0</div><div class="stat-l">possédées</div></div>
+    <div class="stat red"><div class="stat-n" id="s-miss">980</div><div class="stat-l">manquantes</div></div>
+    <div class="stat orange"><div class="stat-n" id="s-dbl">0</div><div class="stat-l">doubles</div></div>
+    <div class="stat blue"><div class="stat-n" id="s-team">0</div><div class="stat-l">équipes <br>finies</div></div>
+  </div>
+  <div class="prog-bar" style="margin-top:10px"><div class="prog-fill" id="main-prog" style="width:0%"></div></div>
+</header>
+
+<nav class="tabs">
+  <button class="tab t-collect active" onclick="switchTab('collect')">
+    <span class="dot"></span>Collecte
+  </button>
+  <button class="tab t-missing" onclick="switchTab('missing')">
+    <span class="dot"></span>Manquantes
+  </button>
+  <button class="tab t-doubles" onclick="switchTab('doubles')">
+    <span class="dot"></span>Doubles
+  </button>
+  <button class="tab t-inventory" onclick="switchTab('inventory')">
+    <span class="dot"></span>Inventaire
+  </button>
+</nav>
+
+<div class="content">
+
+  <!-- COLLECTE -->
+  <div id="tab-collect">
+    <div class="search-wrap"><input type="text" id="s-collect" placeholder="🔍  Rechercher une équipe..." oninput="renderCollect()"></div>
+    <div class="legend">
+      <span class="leg"><span class="leg-sq" style="background:rgba(255,255,255,0.04);border-color:rgba(255,255,255,0.15)"></span>Manquante</span>
+      <span class="leg"><span class="leg-sq" style="background:var(--green-bg);border-color:rgba(34,197,94,0.4)"></span>Possédée</span>
+      <span class="leg"><span class="leg-sq" style="background:var(--orange-bg);border-color:rgba(249,115,22,0.5)"></span>Double (x2+)</span>
+    </div>
+    <p style="font-size:12px;color:var(--text3);margin-bottom:12px">Cliquer pour changer l'état · cliquer un double pour augmenter les exemplaires</p>
+    <div id="collect-list"></div>
+  </div>
+
+  <!-- MANQUANTES -->
+  <div id="tab-missing" style="display:none">
+    <div class="search-wrap"><input type="text" id="s-missing" placeholder="🔍  Filtrer par équipe..." oninput="renderMissing()"></div>
+    <p style="font-size:12px;color:var(--text3);margin-bottom:12px">Appuyer sur un numéro rouge pour le marquer comme possédé</p>
+    <div id="missing-list"></div>
+  </div>
+
+  <!-- DOUBLES -->
+  <div id="tab-doubles" style="display:none">
+    <div class="search-wrap"><input type="text" id="s-doubles" placeholder="🔍  Filtrer par équipe..." oninput="renderDoubles()"></div>
+    <p style="font-size:12px;color:var(--text3);margin-bottom:12px">Liste de tes doubles — parfait pour les échanges</p>
+    <div id="doubles-list"></div>
+  </div>
+
+  <!-- INVENTAIRE -->
+  <div id="tab-inventory" style="display:none">
+    <div class="search-wrap"><input type="text" id="s-inv" placeholder="🔍  Filtrer..." oninput="renderInventory()"></div>
+    <table class="inv-table">
+      <thead><tr>
+        <th>Équipe</th>
+        <th>Progression</th>
+        <th style="text-align:right">Doubles</th>
+      </tr></thead>
+      <tbody id="inv-body"></tbody>
+    </table>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const TEAMS = [
+  "ARG","AUS","BEL","BRA","CAN","CHI","CHN","COL","CRC","CRO",
+  "DEN","ECU","EGY","ENG","ESP","FRA","GER","GHA","GRE","HON",
+  "IDN","IRN","JAP","KOR","MAR","MEX","NED","NGA","NZL","PAN",
+  "PAR","PER","POL","POR","QAT","ROM","SAR","SEN","SLO","SUI",
+  "THA","TUN","URU","USA","VEN","WAL","CIV","MKD"
+];
+const NAMES = {
+  ARG:"Argentine",AUS:"Australie",BEL:"Belgique",BRA:"Brésil",CAN:"Canada",
+  CHI:"Chili",CHN:"Chine",COL:"Colombie",CRC:"Costa Rica",CRO:"Croatie",
+  DEN:"Danemark",ECU:"Équateur",EGY:"Égypte",ENG:"Angleterre",ESP:"Espagne",
+  FRA:"France",GER:"Allemagne",GHA:"Ghana",GRE:"Grèce",HON:"Honduras",
+  IDN:"Indonésie",IRN:"Iran",JAP:"Japon",KOR:"Corée du Sud",MAR:"Maroc",
+  MEX:"Mexique",NED:"Pays-Bas",NGA:"Nigeria",NZL:"Nouvelle-Zélande",PAN:"Panama",
+  PAR:"Paraguay",PER:"Pérou",POL:"Pologne",POR:"Portugal",QAT:"Qatar",
+  ROM:"Roumanie",SAR:"Arabie Saoudite",SEN:"Sénégal",SLO:"Slovénie",SUI:"Suisse",
+  THA:"Thaïlande",TUN:"Tunisie",URU:"Uruguay",USA:"États-Unis",VEN:"Venezuela",
+  WAL:"Pays de Galles",CIV:"Côte d'Ivoire",MKD:"Macédoine du Nord"
+};
+const CARDS = 20;
+const KEY = "panini_wc2026_v2";
+
+// state[team][i] = number of copies (0=missing,1=owned,2=one double,3=two doubles...)
+let state = {};
+let open = {};
+let curTab = "collect";
+
+function load(){
+  try{ state = JSON.parse(localStorage.getItem(KEY)||"{}"); }catch(e){ state={}; }
+  TEAMS.forEach(t=>{ if(!state[t]) state[t]=Array(CARDS).fill(0); });
+}
+function save(){ try{ localStorage.setItem(KEY,JSON.stringify(state)); }catch(e){} }
+
+function getOwned(t){ return state[t].filter(x=>x>0).length; }
+function getDoubles(t){ return state[t].reduce((a,x)=>a+(x>1?x-1:0),0); }
+function isComplete(t){ return getOwned(t)===CARDS; }
+
+function updateStats(){
+  const own = TEAMS.reduce((a,t)=>a+getOwned(t),0);
+  const dbl = TEAMS.reduce((a,t)=>a+getDoubles(t),0);
+  const done = TEAMS.filter(isComplete).length;
+  const pct = Math.round(own/9.8);
+  document.getElementById("s-own").textContent = own;
+  document.getElementById("s-miss").textContent = 980-own;
+  document.getElementById("s-dbl").textContent = dbl;
+  document.getElementById("s-team").textContent = done;
+  document.getElementById("h-pct").textContent = pct+"%";
+  document.getElementById("main-prog").style.width = pct+"%";
+}
+
+function showToast(msg){
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  clearTimeout(t._to);
+  t._to = setTimeout(()=>t.classList.remove("show"),1800);
+}
+
+function switchTab(tab){
+  curTab = tab;
+  document.querySelectorAll(".tab").forEach(b=>b.classList.remove("active"));
+  document.querySelector(".t-"+tab).classList.add("active");
+  ["collect","missing","doubles","inventory"].forEach(id=>{
+    document.getElementById("tab-"+id).style.display = id===tab?"block":"none";
+  });
+  if(tab==="collect") renderCollect();
+  if(tab==="missing") renderMissing();
+  if(tab==="doubles") renderDoubles();
+  if(tab==="inventory") renderInventory();
+}
+
+// ---------- COLLECTE ----------
+function renderCollect(){
+  const q = document.getElementById("s-collect").value.toLowerCase();
+  const list = document.getElementById("collect-list");
+  list.innerHTML="";
+  TEAMS.filter(t=>!q||t.toLowerCase().includes(q)||NAMES[t].toLowerCase().includes(q))
+    .forEach(t=>{
+      const owned = getOwned(t);
+      const pct = owned/CARDS*100;
+      const done = isComplete(t);
+      const isOpen = open[t];
+
+      const div = document.createElement("div");
+      div.className = "team-block"+(done?" complete":"");
+
+      let cardsHTML = "";
+      if(isOpen){
+        cardsHTML = `<div class="cards-grid">`;
+        for(let i=0;i<CARDS;i++){
+          const v = state[t][i];
+          let cls = "", extra = "", title="";
+          if(v===0){cls="";title="Manquante — cliquer pour posséder";}
+          else if(v===1){cls="owned";title="Possédée — cliquer pour mettre en double";}
+          else{
+            cls = v===2?"doubled":"tripled";
+            title=`${v} exemplaires — cliquer pour ajouter un double`;
+            extra = v>=3?`data-count="${v-1}"`:"";
+          }
+          cardsHTML+=`<button class="card-btn ${cls}" ${extra} title="${title}" onclick="toggleCard('${t}',${i})" oncontextmenu="removeCard('${t}',${i},event)">${i+1}</button>`;
+        }
+        cardsHTML += `</div>`;
+      }
+
+      div.innerHTML=`
+        <div class="team-header" onclick="toggleTeam('${t}')">
+          <span class="team-code">${t}</span>
+          <span class="team-fullname">${NAMES[t]}</span>
+          <div class="team-prog">
+            <div class="prog-bar"><div class="prog-fill" style="width:${pct}%"></div></div>
+          </div>
+          <span class="team-count">${owned}/${CARDS}</span>
+          <span class="team-chev ${isOpen?'open':''}">⌄</span>
+        </div>
+        ${cardsHTML}
+      `;
+      list.appendChild(div);
+    });
+}
+
+function toggleTeam(t){ open[t]=!open[t]; renderCollect(); }
+
+function toggleCard(t,i){
+  state[t][i]++;
+  save(); updateStats();
+  const v = state[t][i];
+  if(v===1) showToast(`✅ ${t} #${i+1} — possédée`);
+  else showToast(`🔁 ${t} #${i+1} — ${v-1} double${v>2?'s':''}`);
+  renderCollect();
+}
+
+function removeCard(t,i,e){
+  e.preventDefault();
+  if(state[t][i]===0) return;
+  state[t][i]--;
+  save(); updateStats();
+  showToast(`↩️ ${t} #${i+1} retiré`);
+  renderCollect();
+}
+
+// ---------- MANQUANTES ----------
+function renderMissing(){
+  const q = document.getElementById("s-missing").value.toLowerCase();
+  const el = document.getElementById("missing-list");
+  el.innerHTML="";
+  const teams = TEAMS.filter(t=>!q||t.toLowerCase().includes(q)||NAMES[t].toLowerCase().includes(q));
+  const hasMiss = teams.some(t=>getOwned(t)<CARDS);
+  if(!hasMiss){
+    el.innerHTML='<div class="all-done">🏆 Collection complète ! Bravo !</div>';
+    return;
+  }
+  const grid = document.createElement("div");
+  grid.className="missing-grid";
+  teams.forEach(t=>{
+    const miss = state[t].map((v,i)=>v===0?i+1:null).filter(Boolean);
+    if(!miss.length) return;
+    const card = document.createElement("div");
+    card.className="miss-card";
+    card.innerHTML=`
+      <div class="miss-head">${t}</div>
+      <div class="miss-sub">${NAMES[t]} · ${miss.length} manquante${miss.length>1?'s':''}</div>
+      <div class="miss-nums">${miss.map(n=>`<button class="miss-num" onclick="markOwned('${t}',${n-1})" title="Marquer comme possédée">${n}</button>`).join("")}</div>
+    `;
+    grid.appendChild(card);
+  });
+  el.appendChild(grid);
+}
+
+function markOwned(t,i){
+  state[t][i]=1;
+  save(); updateStats();
+  showToast(`✅ ${t} #${i+1} — possédée`);
+  renderMissing();
+  if(curTab==="missing") renderMissing();
+}
+
+// ---------- DOUBLES ----------
+function renderDoubles(){
+  const q = document.getElementById("s-doubles").value.toLowerCase();
+  const el = document.getElementById("doubles-list");
+  el.innerHTML="";
+  const teams = TEAMS.filter(t=>!q||t.toLowerCase().includes(q)||NAMES[t].toLowerCase().includes(q));
+  const hasDbl = teams.some(t=>getDoubles(t)>0);
+  if(!hasDbl){
+    el.innerHTML=`<div class="empty"><div style="font-size:40px;margin-bottom:8px">🎴</div><div>Pas encore de doubles</div><div style="font-size:12px;margin-top:6px">Ils apparaîtront ici quand tu auras des vignettes en plusieurs exemplaires</div></div>`;
+    return;
+  }
+  const grid = document.createElement("div");
+  grid.className="doubles-grid";
+  teams.forEach(t=>{
+    const dbls = state[t].map((v,i)=>v>1?{n:i+1,count:v-1}:null).filter(Boolean);
+    if(!dbls.length) return;
+    const total = dbls.reduce((a,d)=>a+d.count,0);
+    const card = document.createElement("div");
+    card.className="dbl-card";
+    card.innerHTML=`
+      <div class="dbl-head">${t}</div>
+      <div class="dbl-sub">${NAMES[t]} · ${total} double${total>1?'s':''}</div>
+      <div class="dbl-nums">${dbls.map(d=>`<span class="dbl-num">${d.n}${d.count>1?`<span class="dbl-badge">×${d.count}</span>`:''}</span>`).join("")}</div>
+    `;
+    grid.appendChild(card);
+  });
+  el.appendChild(grid);
+}
+
+// ---------- INVENTAIRE ----------
+function renderInventory(){
+  const q = document.getElementById("s-inv").value.toLowerCase();
+  const tbody = document.getElementById("inv-body");
+  tbody.innerHTML="";
+  TEAMS.filter(t=>!q||t.toLowerCase().includes(q)||NAMES[t].toLowerCase().includes(q))
+    .sort((a,b)=>getOwned(b)-getOwned(a))
+    .forEach(t=>{
+      const own = getOwned(t);
+      const dbl = getDoubles(t);
+      const pct = own/CARDS;
+      const done = isComplete(t);
+      const col = done?"#22c55e":pct>0.5?"#e8c840":pct>0?"#60a5fa":"#475569";
+      const tr = document.createElement("tr");
+      tr.innerHTML=`
+        <td>
+          <span style="font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:14px;color:var(--accent)">${t}</span>
+          <span style="font-size:11px;color:var(--text3);display:block">${NAMES[t]}</span>
+        </td>
+        <td>
+          <div class="inv-prog">
+            <div class="inv-mini-bar"><div class="inv-mini-fill" style="width:${pct*100}%;background:${col}"></div></div>
+            <span class="badge-pct" style="color:${col}">${own}/${CARDS}</span>
+          </div>
+        </td>
+        <td style="text-align:right;font-size:13px;color:${dbl>0?'var(--orange)':'var(--text3)'}">
+          ${dbl>0?`<b>${dbl}</b>`:"—"}
+        </td>
+      `;
+      tbody.appendChild(tr);
+    });
+}
+
+// init
+load();
+renderCollect();
+updateStats();
+</script>
+</body>
+</html>
